@@ -41,6 +41,7 @@ async def on_message(message):
 
 
 @bot.command()
+@commands.has_role("vip-member")
 async def like(ctx, *, uid):
     try:
         response = requests.get(f"https://ff-like-api-two.vercel.app/like?uid={uid}&server=SG")
@@ -82,5 +83,37 @@ async def like(ctx, *, uid):
     except Exception as e:
         await ctx.send(f"Error fetching likes: {e}")
 
+
+@bot.command()
+@commands.has_role("admin")
+async def refresh(ctx):
+    try:
+        response = requests.get(f"https://ff-like-api-two.vercel.app/refresh-tokens")
+
+        if response.status_code != 200:
+            await ctx.send(f"❌ API returned status code {response.status_code}")
+            return
+        
+
+        try:
+            data = response.json()
+        except ValueError:
+            await ctx.send(f"❌ API did not return valid JSON:\n{response.text}")
+            return
+        
+
+        embed = discord.Embed(
+            title="Info",
+            description=f"Status: {data.get('status', 'Unable to refresh tokens ❌')}",
+            color=discord.Color.blue()
+        )
+
+        await ctx.send(f'{ctx.author.mention}', embed = embed)
+
+    except Exception as e:
+        await ctx.send(f"Error fetching likes: {e}")
+
+
 if __name__ == "__main__":
     bot.run(token=get_token())
+
