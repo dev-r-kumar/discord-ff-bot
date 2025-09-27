@@ -43,7 +43,7 @@ async def on_message(message):
 @bot.command()
 async def like(ctx, *, uid):
     try:
-        response = requests.get(f"https://nhk-likes-bot.vercel.app/like?uid={uid}&server=SG")
+        response = requests.get(f"https://ff-like-api-two.vercel.app/like?uid={uid}&server=SG")
         
         if response.status_code != 200:
             await ctx.send(f"❌ API returned status code {response.status_code}")
